@@ -7,7 +7,7 @@ vidHeight = vidObj.Height;
 vidWidth = vidObj.Width;
 s = struct('cdata',zeros(vidHeight,vidWidth,3,'uint8'),'colormap',[]);
 
-v = VideoWriter('assets/videos/typingEdgesOutline.mp4', 'MPEG-4');
+v = VideoWriter('assets/videos/typingEdges.mp4', 'MPEG-4');
 open(v);
 k = 1;
 try
@@ -21,8 +21,12 @@ try
 
     for i = 1:(k-1)
         waitbar((i+frames)/(2*frames),f,'Processing video. Please wait...');
-        e = edgeDetect(s(i).cdata);
-        writeVideo(v,e);
+        edges = edgeDetect(s(i).cdata);
+        thinned = lineThin(edges);
+%         Segout = img;
+% Segout(edges) = 255;
+
+        writeVideo(v,double(thinned));
     end
 
     close(v);
