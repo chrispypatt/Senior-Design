@@ -4,7 +4,7 @@ from collections import deque
 win_size = 5
 
 class PoseData: 
-    def __init__(self, json_path, normalize=false, derivative=false): 
+    def __init__(self, json_path, normalize=False, derivative=False): 
         self.path = json_path
         self.normalize = normalize
         self.derivative = derivative
@@ -119,7 +119,9 @@ def read_json(path):
 # the .json extension and sort the files alphanumerically. Then prepend 
 # the directory path to filenames  
 def get_files(path): 
-    files = list(filter(is_json, os.listdir(path))).sort()
+    # files = list(filter(is_json, os.listdir(path))).sort()
+    files = list(filter(is_json, os.listdir(path)))
+    files.sort()
     files = [path + "/" + name for name in files]
     return files
 

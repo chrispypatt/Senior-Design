@@ -1,4 +1,5 @@
 import os
+from posedata import *
 
 json_dir = "/media/storage/chris/json_output"
 running_dir = json_dir + "/running"
@@ -18,7 +19,7 @@ def scan_json_directories2(directory):
         if entry.is_dir() and entry.name.startswith("output_"): 
             # Add to PoseData object for video to data array
             video_data.append(PoseData(entry.path))
-
+    	
     return video_data
             
 
