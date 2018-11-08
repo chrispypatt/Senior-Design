@@ -22,7 +22,7 @@ def create_2Dvector(p1,p2):
 #	and hip vector, followed by calculating the 
 #	angle between the two to get the tilt of the person
 def calculate_angle(pose):
-
+	# pose = pose_list[0]
 	# Create hip vector with LHip to RHip 
 	# LHip --------------- RHip
 	left_hip_point = (pose[LHip][0],pose[LHip][1])
@@ -48,7 +48,7 @@ def calculate_angle(pose):
 
 	cos_theta = dot_prod/(hip_length*spine_length)
 
-	return math.acos(cos_theta)
+	return math.degrees(math.acos(cos_theta))
 
 def calculate_average_tilt(video):
 	angle_sum = 0
@@ -59,17 +59,23 @@ def calculate_average_tilt(video):
 			break
 		else:
 			count += 1
+			# print(calculate_angle(frame_pose))
 			angle_sum += calculate_angle(frame_pose)
-	return angle_sum/count
+	if count == 0:
+		return "Error, divide by zero"
+	else:
+		return angle_sum/count
 
 
 
 def main():
-	video_data = scan_json_directories2('json_output/boxing')
+	video_data = scan_json_directories2('../json_output/boxing')
 	for video in video_data:
 		print(video.path + ":")
 		average_tilt = calculate_average_tilt(video)
+		print("Average tilt (degrees):")
 		print(average_tilt)
+		print("")
 
 
 if __name__ == "__main__":

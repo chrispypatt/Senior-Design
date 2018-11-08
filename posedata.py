@@ -1,7 +1,9 @@
 import os
 from collections import deque
+import json
 
-win_size = 5
+
+win_size = 1
 
 class PoseData: 
     def __init__(self, json_path, normalize=False, derivative=False): 
@@ -42,12 +44,12 @@ class PoseData:
                 return None
             
             # Get the data from the next frame. 
-            temp = read_json(self.files[pos])
+            temp = read_json(self.files[self.pos])
             if temp == None: 
                 self.clear_window()
             else: 
                 self.window_append(temp)
-            pos += 1
+            self.pos += 1
 
         return format_window(self.window) 
    
@@ -103,7 +105,7 @@ def format_window(window):
 
 
 def rotate_matrix(M):
-    return [[M[i][j] for i in range(len(M))] for j in range(len(M[0]))]
+    return [M[i][j] for i in range(len(M)) for j in range(len(M[0]))]
 
 
 # Reads the json file with given path. Returns an array of keypoints where
@@ -112,8 +114,27 @@ def rotate_matrix(M):
 # returned. None is also returned if at least a minimum percentage of 
 # keypoints are not found. This percentage should be a global variable so it
 # can be changed for all object instances simultaneously
-def read_json(path):
-    return
+def read_json(path, percent=.90):
+    data = []
+    w, h = 3, 25
+    count = 0
+    poseExists = 0
+    keypoints = [[0 for x in range(w)]for y in range(h)]    ## Generates 2D array to be filled with keypoints
+    with open(path) as json_file:                           ## 'path' is assuming the user inputs the correct file path + json file name
+        data = json.load(json_file)
+    if data["people"]:
+        for x in range (0,25):
+            for y in range (0,2):
+                keypoints[x][y] = data["people"][0]["pose_keypoints_2d"][count]
+                if(keypoints[x][y]>0 & y<2):     #Increase poseExists if x,y are greater than 0. Does not check confidence value
+                    poseExists = poseExists + 1
+                count = count + 1
+        if((poseExists/50)>percent):      
+            return keypoints
+        else:
+            return None
+    else:
+        return None
 
 # Get list of files in directory. Filter out any files which don't have 
 # the .json extension and sort the files alphanumerically. Then prepend 
