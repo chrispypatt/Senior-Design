@@ -33,6 +33,7 @@ def process_dir(script, input_dir, output_dir):
 
                     # Make output directory path
                     output_path = make_output_path(output_dir, filename)
+                    video_path = make_output_path(output_path,filename)
 
                     # Run openpose if output directory does not already
                     # exist. If it exists, we assume openpose has already
@@ -44,7 +45,7 @@ def process_dir(script, input_dir, output_dir):
 
                         # Execute openpose script on file, putting results in
                         # new output directory created for the file.
-                        status = openpose(script, entry.path, output_path)
+                        status = openpose(script, entry.path, output_path,video_path)
                        
                         # delete output directory if openpose failed 
                         if status != 0: 
@@ -69,9 +70,10 @@ def process_dir(script, input_dir, output_dir):
 
 
 # Output dir should exist and have write permission before calling
-def openpose(script, input_file, output_dir): 
+def openpose(script, input_file, output_dir, video_path): 
+    print(output_dir+".avi")
     cmd = script + " --video  " + input_file + " --display 0" \
-          + " --write_json " + output_dir + " --render_pose 0"
+          + " --write_video " + video_path + ".avi --write_json " + output_dir  
     return os.system(cmd)
 
 

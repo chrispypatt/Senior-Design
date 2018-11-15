@@ -47,6 +47,8 @@ class PoseData:
             temp = read_json(self.files[self.pos])
             if temp == None: 
                 self.clear_window()
+                self.pos += 1
+                return False 
             else: 
                 self.window_append(temp)
             self.pos += 1
