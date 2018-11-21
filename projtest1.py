@@ -104,7 +104,7 @@ def calculate_frequency(video):
 # include in posedata.py
 
 # assuming that the output videos have not been processed into separate frames associated w/ its keypoints
-def write_to_frame(video, angle, freq)
+def write_to_frame(video, angle, freq):
 	# read in video
 	cap = cv2.VideoCapture('OPvideo.avi') # capture output video; 0 instead of video name -> webcam
 							# video?

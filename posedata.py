@@ -8,6 +8,7 @@ win_size = 1
 class PoseData: 
     def __init__(self, json_path, normalize=False, derivative=False): 
         self.path = json_path
+        self.video_name = json_path.rsplit('/',1)[1]
         self.normalize = normalize
         self.derivative = derivative
         self.files = get_files(json_path)
@@ -125,12 +126,15 @@ def read_json(path, percent=.90):
     with open(path) as json_file:                           ## 'path' is assuming the user inputs the correct file path + json file name
         data = json.load(json_file)
     if data["people"]:
+        # print (data["people"])
         for x in range (0,25):
-            for y in range (0,2):
+            for y in range (0,3):
                 keypoints[x][y] = data["people"][0]["pose_keypoints_2d"][count]
+                
                 if(keypoints[x][y]>0 & y<2):     #Increase poseExists if x,y are greater than 0. Does not check confidence value
                     poseExists = poseExists + 1
                 count = count + 1
+            # print (keypoints[x])
         if((poseExists/50)>percent):      
             return keypoints
         else:
