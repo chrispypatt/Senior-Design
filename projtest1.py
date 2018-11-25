@@ -116,20 +116,20 @@ def write_to_frame(video, angle, freq):
 
 	# iterate through whole video
 	while(cap.isOpened()): # while video opened?
- 		ret, frame = cap.read()		# read in frame
+		ret, frame = cap.read()		# read in frame
 		if ret == True:
 			# display text and stuff on frame
 
 			# if keypoints exist
 
-            font = cv2.FONT_HERSHEY_SIMPLEX	# set font
+			font = cv2.FONT_HERSHEY_SIMPLEX	# set font
 			cv2.putText(frame, "angle: " + angle, (50,50), font, 2, (255,255,0), 2)
 
 
 			# if angle >= angle_thresh
 			# 	cv2.rectangle(img, pt1, pt2, color[, thickness[, lineType[, shift]]])
 			# if freq >= freq_thresh
-			# 	cv2.rectangle(img, pt1, pt2, color[, thickness[, lineType[, shift]]])
+			cv2.rectangle(frame, (10,10),(40,40),(0,255,0),3)
 			
 
 			out.write(frame)		# write new frame into the new file newvideo.avi

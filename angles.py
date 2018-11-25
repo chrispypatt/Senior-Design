@@ -47,14 +47,22 @@ def write_to_frame(video, angles, freq):
 			# if keypoints exist
 			font = cv2.FONT_HERSHEY_SIMPLEX	# set font
 			if count < len(angles):
-				cv2.putText(frame, "angle: %.2f" % angles[count], (10,10), font, 0.5, (255,255,0), 2)
+				if angles[count] > 90.0:
+					cv2.putText(frame, "angle: %.2f" % angles[count], (10,15), font, 0.5, (0,0,255), 2)
+				else:
+					cv2.putText(frame, "angle: %.2f" % angles[count], (10,15), font, 0.5, (255,255,0), 2)
 				cv2.putText(frame, "freq: %.2f" % freq[count], (10,fheight-10), font, 0.5, (255,255,0), 2)
 				count +=1
+			frame_pose = video.get_window()
+			
+			if (frame_pose != False):
+				cv2.line(frame,(int(frame_pose[RElbow][0]),int(frame_pose[RElbow][1])),(int(frame_pose[Neck][0]),int(frame_pose[Neck][1])),(0,0,255),2)
+				cv2.line(frame,(int(frame_pose[Neck][0]),int(frame_pose[Neck][1])),(int(frame_pose[MHip][0]),int(frame_pose[MHip][1])),(0,0,255),2)
 
 			# if angle >= angle_thresh
-			# 	cv2.rectangle(img, pt1, pt2, color[, thickness[, lineType[, shift]]])
+			# cv2.rectangle(img, pt1, pt2, color[, thickness[, lineType[, shift]]])
 			# if freq >= freq_thresh
-			# 	cv2.rectangle(img, pt1, pt2, color[, thickness[, lineType[, shift]]])
+			# cv2.rectangle(img, pt1, pt2, color[, thickness[, lineType[, shift]]])
 			# cv2.imshow('Frame',frame)
 
 
@@ -153,6 +161,7 @@ def calculate_frequency(video):
 				# plt.ioff()
 				# plt.show()
 			frequencies.append(frqY)
+	video.pos = 0
 	if count == 0:
 		return "Error, divide by zero"
 	else:
