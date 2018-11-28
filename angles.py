@@ -59,16 +59,16 @@ def write_to_frame(video, angles, freq):
 				cv2.line(frame,(int(frame_pose[RElbow][0]),int(frame_pose[RElbow][1])),(int(frame_pose[Neck][0]),int(frame_pose[Neck][1])),(0,0,255),2)
 				cv2.line(frame,(int(frame_pose[Neck][0]),int(frame_pose[Neck][1])),(int(frame_pose[MHip][0]),int(frame_pose[MHip][1])),(0,0,255),2)
 
-			# if angle >= angle_thresh
+			# if angle >= angle_threshc
 			# cv2.rectangle(img, pt1, pt2, color[, thickness[, lineType[, shift]]])
 			# if freq >= freq_thresh
 			# cv2.rectangle(img, pt1, pt2, color[, thickness[, lineType[, shift]]])
-			# cv2.imshow('Frame',frame)
+			cv2.imshow('Frame',frame)
 
 
 			out.write(frame)		# write new frame into the new file newvideo.avi
 
-			if (cv2.waitKey(1) & 0xFF)== ord('q'):	# press 'q' to exit
+			if (cv2.waitKey(50) & 0xFF)== ord('q'):	# press 'q' to exit
 				break
 		else:
 			break
@@ -173,8 +173,8 @@ def main():
 		print(video.path + ":")
 		# average_angle, angles = calculate_average_angle(video)
 		average_angle, angles, freqs = calculate_frequency(video)
-		print("Average angle (degrees):")
-		print(average_angle)
+		# print("Average angle (degrees):")
+		# print(average_angle)
 		print("")
 		write_to_frame(video, angles, freqs)
 
