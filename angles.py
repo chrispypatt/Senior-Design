@@ -30,10 +30,12 @@ def write_to_frame(video, angles, freq, behaviors):
     # define codec
     fourcc = cv2.VideoWriter_fourcc(*"XVID")
 
-    (grabbed, frame) = cap.read()
-    fshape = frame.shape
-    fheight = fshape[0]
-    fwidth = fshape[1]
+    #(grabbed, frame) = cap.read()
+    #fshape = frame.shape
+    #fheight = fshape[0]
+    #fwidth = fshape[1]
+    fwidth = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    fheight = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     
     # define codec, create VideoWriter object; output stored in 'newvideo.avi' file
     out = cv2.VideoWriter(video.path +  "/" + video.video_name +'new.avi',\
@@ -44,6 +46,8 @@ def write_to_frame(video, angles, freq, behaviors):
     # Why do we do this again?
     cap = cv2.VideoCapture(video.path + "/" + video.video_name + ".avi") 
 
+    font = cv2.FONT_HERSHEY_SIMPLEX	# set font
+    font_size = 4
 
     # iterate through whole video
     count = 0
@@ -54,22 +58,25 @@ def write_to_frame(video, angles, freq, behaviors):
         
         # display text and stuff on frame
         # if keypoints exist
-        # Do we have to set font every iteration?
-        font = cv2.FONT_HERSHEY_SIMPLEX	# set font
+
+        # Write angle information 
         if count < len(angles):
             if angles[count] > 90.0:
                 cv2.putText(frame, "angle: %.2f" % angles[count],\
-                            (10,15), font, 0.5, (0,0,255), 2)
+                            (10,15), font, font_size, (0,0,255), 2)
             else:
                 cv2.putText(frame, "angle: %.2f" % angles[count],\
-                            (10,15), font, 0.5, (255,255,0), 2)
-            cv2.putText(frame, "freq: %.2f" % freq[count],\
-                        (10,fheight-10), font, 0.5, (255,255,0), 2)
-            cv2.putText(frame, "behavior: {}".format(behaviors[count]),\
-                        (10, fheight-20), font, 0.5, (255, 255, 0), 2)
-        count += 1
-        frame_pose = video.get_window()
-        
+                            (10,15), font, font_size, (255,255,0), 2)
+
+        # Write frequency information 
+        cv2.putText(frame, "freq: %.2f" % freq[count],\
+                    (10,fheight-10), font, font_size, (255,255,0), 2)
+
+        # Write behavior classification
+        cv2.putText(frame, "behavior: {}".format(behaviors[count]),\
+                    (10, fheight-20), font, font_size, (255, 255, 0), 2)
+
+        frame_pose = video.get_window() 
         if (frame_pose != False):
             cv2.line(frame,\
                      (int(frame_pose[RElbow][0]), int(frame_pose[RElbow][1])),\
@@ -82,6 +89,7 @@ def write_to_frame(video, angles, freq, behaviors):
                      (0,0,255),
                      2)
 
+        count += 1
         # if angle >= angle_threshc
         # cv2.rectangle(img, pt1, pt2, color[, thickness[, lineType[, shift]]])
         # if freq >= freq_thresh
