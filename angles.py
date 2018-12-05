@@ -86,7 +86,7 @@ def write_to_frame(video, angles, freq, behaviors):
         # cv2.rectangle(img, pt1, pt2, color[, thickness[, lineType[, shift]]])
         # if freq >= freq_thresh
         # cv2.rectangle(img, pt1, pt2, color[, thickness[, lineType[, shift]]])
-        cv2.imshow('Frame',frame)
+        #cv2.imshow('Frame',frame)
 
         out.write(frame)		# write new frame into the new file newvideo.avi
 
