@@ -31,7 +31,7 @@ behaviors = ['walking', 'jogging', 'boxing', 'handclapping', 'handwaving',
 num_behaviors = 6
 
 model_file = 'model.h5'
-
+normalize = True
 
 #_ Predict Single Video ________________________________________________________
 
@@ -180,8 +180,10 @@ def prepare_sets(json_dir, win_size, test_size=0.2):
 
 
 def prepare_X_set(training_set):
-    return np.array([normalize_window(window[0]) for window in training_set])
-    #return np.array([window[0] for window in training_set])
+    if normalize:
+        return np.array([normalize_window(window[0]) for window in training_set])
+    else:
+        return np.array([window[0] for window in training_set])
 
 
 def prepare_Y_set(training_set): 
