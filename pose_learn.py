@@ -61,10 +61,10 @@ def predict_single_video(json_dir):
 
     # Make list containing tuples of the Y output and start frame for each
     # window using the list of windows and the Y set
-    Y_windows = [(output, window[2]) for window, output in zip(X_set, Y_set)] 
+    Y_windows = [(output, window[2]) for window, output in zip(windows, Y_set)] 
 
     # Make a list of num_frames numpy arrays of length 6, initialized to zero
-    Y_sum = np.zeros(num_frames, num_behaviors)
+    Y_sum = np.zeros((num_frames, num_behaviors))
 
     # Iterate through Y_windows. For each tuple, add the Y output vector to
     # win_size elements of Y_sum starting from the start index
