@@ -1,6 +1,6 @@
 import openpose_all
-#import angles
-#import pose_learn
+import angles
+import pose_learn
 import os
 
 
@@ -15,7 +15,14 @@ def make_output_paths(input_path):
     output_path = '{}/output_{}'.format(input_dir, filename)
     output_video_path = '{}/output_{}.avi'.format(input_dir, filename)
     return output_path, output_video_path 
-   
+  
+
+def run_openpose_on_video(video_path): 
+    output_path, output_video_path = make_output_paths(video_path)
+    script = '~/Packages/openpose/build/examples/openpose/openpose.bin'
+    status = openpose_all.openpose(script, video_path, output_path,\
+                                   output_video_path) 
+    return output_path, output_video_path, status
 
 
 
