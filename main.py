@@ -14,7 +14,7 @@ def make_output_paths(input_path):
     basename = os.path.basename(input_path)
     filename, file_ext = os.path.splitext(basename)
     output_path = '{}/output_{}'.format(input_dir, filename)
-    output_video_path = '{}/output_{}.avi'.format(input_dir, filename)
+    output_video_path = '{}/output_{}.avi'.format(output_path, filename)
     return output_path, output_video_path 
   
 
@@ -28,8 +28,6 @@ def run_openpose_on_video(video_path):
                                    output_video_path) 
     os.chdir(cwd)
     return output_path, output_video_path, status
-
-
 
 
 def main(): 
