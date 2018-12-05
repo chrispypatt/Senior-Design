@@ -21,7 +21,7 @@ RWrist = 4
 RShoulder = 5
 
 def write_to_frame(video, angles, freq, behaviors):
-    fps = 30
+    fps = 25
 
     # read in video
     cap = cv2.VideoCapture(video.path + "/" + video.video_name + ".avi") 
