@@ -3,6 +3,7 @@ import angles
 import pose_learn
 import os
 from posedata import PoseData
+import sys
 
 
 
@@ -18,8 +19,7 @@ def make_output_paths(input_path):
     return output_path, output_video_path 
   
 
-def run_openpose_on_video(video_path): 
-    output_path, output_video_path = make_output_paths(video_path)
+def run_openpose_on_video(video_path, output_path, output_video_path): 
     script = 'build/examples/openpose/openpose.bin'
     openpose_dir = '/home/patte539/Packages/openpose/'
     cwd = os.getcwd()
@@ -27,27 +27,29 @@ def run_openpose_on_video(video_path):
     status = openpose_all.openpose(script, video_path, output_path,\
                                    output_video_path) 
     os.chdir(cwd)
-    return output_path, output_video_path, status
+    return status
 
 
 def main(): 
     video_path = sys.argv[1]
    
-    # Run openpose on the video
-    print("Running openpose on {}".format(video_path))
-    output_path, output_video_path, status = run_openpose_on_video(video_path)
-    if status == 0: 
-        print("Openpose Successful")
-    else:
-        print("Openpose failed. Exiting...")
-        return 1
+    # Run openpose on the video if necessary
+    output_path, output_video_path = make_output_paths(video_path)
+    if not os.path.isdir(output_path):
+        print("Running openpose on {}".format(video_path))
+        status = run_openpose_on_video(video_path, output_path, output_video_path)
+        if status == 0: 
+            print("Openpose Successful")
+        else:
+            print("Openpose failed. Exiting...")
+            return 1
 
     # Make a PoseData object 
     pd = PoseData(output_path)
    
     # Get the angles information
     print("Calculating angles")
-    average_angle, angles, freqs = angles.calculate_frequency(pd)
+    average_angle, frame_angles, freqs = angles.calculate_frequency(pd)
 
     # Classify the video
     print("Classifying behaviors")
@@ -55,7 +57,7 @@ def main():
 
     # Write output to video
     print("Writing output to video")
-    angles.write_to_frame(pd, angles, freqs, behaviors)
+    angles.write_to_frame(pd, frame_angles, freqs, behaviors)
     
     return 0
 

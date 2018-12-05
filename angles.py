@@ -77,7 +77,7 @@ def write_to_frame(video, angles, freq, behaviors):
                      (0, 0, 255), 
                      2)
             cv2.line(frame,\
-                     (int(frame_pose[Neck][0]), int(frame_pose[Neck][1])),\ 
+                     (int(frame_pose[Neck][0]), int(frame_pose[Neck][1])),\
                      (int(frame_pose[MHip][0]), int(frame_pose[MHip][1])),\
                      (0,0,255),
                      2)
