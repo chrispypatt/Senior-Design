@@ -19,9 +19,13 @@ def make_output_paths(input_path):
 
 def run_openpose_on_video(video_path): 
     output_path, output_video_path = make_output_paths(video_path)
-    script = '~/Packages/openpose/build/examples/openpose/openpose.bin'
+    script = 'build/examples/openpose/openpose.bin'
+    openpose_dir = '~/Packages/openpose/'
+    cwd = os.getcwd()
+    os.chdir(openpose_dir)
     status = openpose_all.openpose(script, video_path, output_path,\
                                    output_video_path) 
+    os.chdir(cwd)
     return output_path, output_video_path, status
 
 
