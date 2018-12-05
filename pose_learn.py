@@ -57,7 +57,7 @@ def predict_single_video(json_dir):
     X_set = prepare_X_set(windows)
 
     # Predict using the X_set and loaded model to get the Y_set
-    Y_set = model.predict(X_set, batch_size=128, verbose=2)
+    Y_set = model.predict(X_set, batch_size=128, verbose=0)
 
     # Make list containing tuples of the Y output and start frame for each
     # window using the list of windows and the Y set
@@ -69,15 +69,17 @@ def predict_single_video(json_dir):
     # Iterate through Y_windows. For each tuple, add the Y output vector to
     # win_size elements of Y_sum starting from the start index
     for window in Y_windows:
-        for i in range(window[1], window[1] + win_size):
+	start_frame = window[1]
+        for i in range(start_frame, start_frame + win_size):
             Y_sum[i] += window[0]
-
 
     # Iterate through Y_sum. For each element, determine the index of the
     # maximum value (not sure how to break ties yet), and use this index to add
     # the behavior string (from behaviors) to a new list. If all elements are
     # zero, add an empty string to the list. 
-    Y_behaviors = [behaviors[np.argmax(sum_out)] for sum_out in Y_sum] 
+    Y_behaviors = [behaviors[np.argmax(sum_out)]\
+		   if np.sum(sum_out) > 0 else ''\
+	           for sum_out in Y_sum] 
     
     # Return the behaviors list. Use to write the predicted behavior to the
     # output video. 
@@ -88,6 +90,7 @@ def predict_single_video(json_dir):
 #_ Keras _______________________________________________________________________ 
 
 
+# Use as example, don't call directly 
 def initialize_training(load_model=False):
     win_size = 12
     json_dir = '/media/storage/chris/json_output'
@@ -104,7 +107,7 @@ def initialize_training(load_model=False):
     
     return model 
 
-
+# Use as example, don't call directly 
 def train_model(model, num_batches, num_epochs):     
     print('Training the model')
     model.fit(X_train, Y_train, validation_data=(X_test, Y_test),\
