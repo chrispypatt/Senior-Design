@@ -124,6 +124,40 @@ def train_model(model, num_batches, num_epochs):
     return model
 
 
+def build_model2(win_size): 
+    k_size = (2, 2)
+
+    # Create the model
+    model = Sequential()
+    
+    # Add the model layers
+    model.add(Conv2D(20, kernel_size=k_size, input_shape=(25, win_size, 3),
+              data_format='channels_last'))
+    model.add(Activation('relu'))
+    model.add(Conv2D(20, kernel_size=k_size, data_format='channels_last')) 
+    model.add(Activation('softmax'))
+    model.add(MaxPooling2D(pool_size=k_size, data_format='channels_last'))
+    #model.add(Dropout(0.25))
+    model.add(Conv2D(40, kernel_size=k_size, data_format='channels_last')) 
+    model.add(Activation('relu'))
+    model.add(Conv2D(40, kernel_size=k_size, data_format='channels_last')) 
+    model.add(Activation('softmax'))
+    model.add(MaxPooling2D(pool_size=k_size, data_format='channels_last'))
+    #model.add(Dropout(0.25))
+    model.add(Flatten())
+    model.add(Dense(256, activation='sigmoid'))
+    #model.add(Dropout(0.5))
+    model.add(Dense(256, activation='relu'))
+    #model.add(Dropout(0.5))
+    model.add(Dense(num_behaviors, activation='softmax'))
+
+    # Compile the model
+    model.compile(loss=categorical_crossentropy,
+                  optimizer=Adadelta(), metrics=['accuracy'])
+    return model
+
+
+
 def build_model(win_size): 
     k_size = (2, 2)
 
