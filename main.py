@@ -53,7 +53,6 @@ def main():
 
     # Classify the video
     print("Classifying behaviors")
-    pose_learn.model_file = 'normal_model.h5'
     behaviors = pose_learn.predict_single_video(output_path)
 
     # Write output to video
