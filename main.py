@@ -1,4 +1,5 @@
 import openpose_all
+import tensorflow as tf
 import angles
 import pose_learn
 import os
@@ -53,7 +54,8 @@ def main():
 
     # Classify the video
     print("Classifying behaviors")
-    behaviors = pose_learn.predict_single_video(output_path)
+    with tf.device('/gpu:2'):
+        behaviors = pose_learn.predict_single_video(output_path)
 
     # Write output to video
     print("Writing output to video")
