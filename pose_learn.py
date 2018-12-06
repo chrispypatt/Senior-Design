@@ -30,8 +30,8 @@ behaviors = ['walking', 'jogging', 'boxing', 'handclapping', 'handwaving',
 
 num_behaviors = 6
 
-model_file = 'model.h5'
-normalize = True
+model_file = 'normal_model.h5'
+normalize = False
 
 #_ Predict Single Video ________________________________________________________
 
@@ -55,6 +55,7 @@ def predict_single_video(json_dir):
 
     # Generate the X data set for the video
     X_set = prepare_X_set(windows)
+    X_set = scale_Xset(X_set, 160/1920)
 
     # Predict using the X_set and loaded model to get the Y_set
     Y_set = model.predict(X_set, batch_size=128, verbose=0)
@@ -226,6 +227,16 @@ def scan_json_dir(directory, behavior):
 
 
 #____ Window Normalization Functions ___________________________________________
+
+def scale_Xset(Xset, scale_factor):  
+    for i in range(0, len(Xset)):
+        for j in range(0, len(Xset[i])):
+            for k in range(0, len(Xset[i][j])):
+                if Xset[i][j][k][2] != 0:
+                    Xset[i][j][k][0] *= scale_factor
+                    Xset[i][j][k][1] *= scale_factor
+    return Xset
+
 
 def normalize_window(window): 
     x_max, x_min, y_max, y_min = get_window_bounds(window)
