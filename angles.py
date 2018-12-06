@@ -61,7 +61,7 @@ def write_to_frame(video, angles, freq, behaviors):
             if angles[count] is None:
                 cv2.putText(frame, "angle: -",\
                             angle_pos, font, font_size, (0,0,255), 2)
-            else if angles[count] > 90.0:
+            elif angles[count] > 90.0:
                 cv2.putText(frame, "angle: %.2f" % angles[count],\
                             angle_pos, font, font_size, (0,0,255), 2)
             else:
