@@ -181,15 +181,13 @@ def calculate_frequency(video):
         angles.append(angle)
          
         if len(angles) > 0:
-            # Why are we subtracting the average from each angle?
-            # angles = np.subtract(angles,np.average(angles))
-
             # Use last 40 angles when more than 40
             if len(angles) > 40: 
-                # Use last 40 angles for FFT
-                FFT = sy.fft(np.array(angles[-40:]))
+                angle_win = angles[-40:]
             else:
-                FFT = sy.fft(np.array(angles))
+                angle_win = angles
+
+            FFT = sy.fft(np.subtract(angle_win, np.average(angle_win)))
             sample_frequencies = np.fft.fftfreq( len(FFT), d=0.04)
             freq = abs(sample_frequencies[np.argmax(FFT)]) 
         print('Frame {}, Frequency: {}'.format(i, freq))
