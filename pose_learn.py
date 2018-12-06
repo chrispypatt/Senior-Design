@@ -70,7 +70,7 @@ def predict_single_video(json_dir):
     # Iterate through Y_windows. For each tuple, add the Y output vector to
     # win_size elements of Y_sum starting from the start index
     for window in Y_windows:
-	start_frame = window[1]
+        start_frame = window[1]
         for i in range(start_frame, start_frame + win_size):
             Y_sum[i] += window[0]
 
