@@ -34,8 +34,8 @@ def write_to_frame(video, angles, freq, behaviors):
     print('Frame size: {}x{}'.format(fwidth, fheight))
 
     # Set the position of the text elements and text parameters 
-    behavior_pos = (10, 80) 
-    angle_pos = (10, fheight - 120)
+    behavior_pos = (10, 100) 
+    angle_pos = (10, fheight - 180)
     freq_pos = (10, fheight - 40)
     font = cv2.FONT_HERSHEY_DUPLEX      # set font
     font_size = 4
@@ -192,6 +192,7 @@ def calculate_frequency(video):
                 FFT = sy.fft(np.array(angles))
             sample_frequencies = np.fft.fftfreq( len(FFT), d=0.04)
             freq = abs(sample_frequencies[np.argmax(FFT)]) 
+        print('Frame {}, Frequency: {}'.format(i, freq))
         frequencies.append(freq)
         last_angle = angle
 
