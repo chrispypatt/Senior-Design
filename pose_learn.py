@@ -55,6 +55,7 @@ def predict_single_video(json_dir):
 
     # Generate the X data set for the video
     X_set = prepare_X_set(windows)
+    print('X_set.shape = {}'.format(X_set.shape))
     X_set = scale_Xset(X_set, 160/1920)
     print('X_set.shape = {}'.format(X_set.shape))
 
