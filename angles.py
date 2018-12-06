@@ -162,9 +162,9 @@ def calculate_frequency(video):
     # sum up tilt angles for the current video
     for i in range(0, video.num_frames):
         pose = video.get_frame_pose(i)
-        if pose is not None and has_keypoint(pose, RShoulder)
-                            and has_keypoint(pose, RElbow)
-                            and has_keypoint(pose, Neck)
+        if pose is not None and has_keypoint(pose, RShoulder)\
+                            and has_keypoint(pose, RElbow)\
+                            and has_keypoint(pose, Neck)\
                             and has_keypoint(pose, MHip): 
 
             angle = calculate_angle(pose,RShoulder,RElbow,Neck,MHip)
