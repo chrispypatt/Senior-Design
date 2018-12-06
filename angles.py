@@ -189,7 +189,6 @@ def calculate_frequency(video):
             FFT = sy.fft(np.subtract(angle_win, np.average(angle_win)))
             sample_frequencies = np.fft.fftfreq( len(FFT), d=0.04)
             freq = abs(sample_frequencies[np.argmax(FFT)]) 
-        print('Frame {}, Frequency: {}'.format(i, freq))
         frequencies.append(freq)
         last_angle = angle
 
