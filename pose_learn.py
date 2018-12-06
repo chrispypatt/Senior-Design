@@ -56,9 +56,11 @@ def predict_single_video(json_dir):
     # Generate the X data set for the video
     X_set = prepare_X_set(windows)
     X_set = scale_Xset(X_set, 160/1920)
+    print('X_set.shape = {}'.format(X_set.shape))
 
     # Predict using the X_set and loaded model to get the Y_set
     Y_set = model.predict(X_set, batch_size=128, verbose=0)
+    del model
 
     # Make list containing tuples of the Y output and start frame for each
     # window using the list of windows and the Y set
