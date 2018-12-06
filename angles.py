@@ -181,8 +181,8 @@ def calculate_frequency(video):
          
         if len(angles) > 0:
             # Use last 40 angles when more than 40
-            if len(angles) > 40: 
-                angle_win = angles[-40:]
+            if len(angles) > 100: 
+                angle_win = angles[-100:]
             else:
                 angle_win = angles
 
