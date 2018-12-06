@@ -19,7 +19,7 @@ with tf.device('/gpu:2'), open(output_file, 'a') as f:
 
         # Write the result of the training to the file
         loss, acc = model.evaluate(X_test, Y_test)
-        f.write('{} epochs completed:\n'.format((i + 1) * 10) 
+        f.write('{} epochs completed:\n'.format((i + 1) * 10)) 
         f.write('    Loss: {}\n'.format(loss))
         f.write('    Accuracy: {}\n'.format(acc))
 
