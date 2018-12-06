@@ -19,11 +19,11 @@ class PoseData:
     # information with the format [keypoint][x, y, c]. 
     def get_frame_pose(self, frame): 
         # Make sure position is within range 
-        if frame >= len(files):
+        if frame >= len(self.files):
             return None
         
         # Read the json file and return result
-        return read_json(files[frame])
+        return read_json(self.files[frame])
 
     # PoseData.get_window(win_size)
     # 
