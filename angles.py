@@ -2,9 +2,8 @@
 import cv2  # need opencv package: cv2
 import os
 import math  
-from posedata import PoseData
+from posedata2 import PoseData
 import numpy as np
-from read_json import *
 import matplotlib.pyplot as plt
 import scipy as sy
 import scipy.fftpack as fftpack
@@ -59,24 +58,25 @@ def write_to_frame(video, angles, freq, behaviors):
         # Write angle, freq, and draw angle if behavior is hand waving
         if behaviors[count] == 'handwaving':
             # Write angle information 
-            if count < len(angles):
-                if angles[count] > 90.0:
-                    cv2.putText(frame, "angle: %.2f" % angles[count],\
-                                angle_pos, font, font_size, (0,0,255), 2)
-                else:
-                    cv2.putText(frame, "angle: %.2f" % angles[count],\
-                                angle_pos, font, font_size, (255,255,0), 2)
+            if angles[count] is None:
+                cv2.putText(frame, "angle: -",\
+                            angle_pos, font, font_size, (0,0,255), 2)
+            else if angles[count] > 90.0:
+                cv2.putText(frame, "angle: %.2f" % angles[count],\
+                            angle_pos, font, font_size, (0,0,255), 2)
+            else:
+                cv2.putText(frame, "angle: %.2f" % angles[count],\
+                            angle_pos, font, font_size, (255,255,0), 2)
 
             # Write frequency information 
             cv2.putText(frame, "freq: %.2f" % freq[count],\
                         freq_pos, font, font_size, (255,255,0), 2)
 
-
-
-            pose = video.get_window() 
-            if (pose != False and has_keypoint(frame, RElbow)\
-                              and has_keypoint(frame, Neck)
-                              and has_keypoint(frame, MHip)):
+            # Draw lines 
+            pose = video.get_frame_pose(count) 
+            if (pose is not None and has_keypoint(pose, RElbow)\
+                                 and has_keypoint(pose, Neck)
+                                 and has_keypoint(pose, MHip)):
                 # Draw neck to elbow line 
                 cv2.line(frame,\
                          keypoint_int(pose, RElbow), keypoint_int(pose, Neck),\
@@ -150,68 +150,49 @@ def calculate_angle(pose, a1,a2,b1,b2):
 
 def calculate_frequency(video):
     angles = list()
-    all_angles = list()
     frequencies = list()
-    frqY = 0
-    angle_sum = 0
-    count = 0
-    while 1: # sum up tilt angles for the current video
-        frame_pose = video.get_window()
-        if frame_pose == None:
-            break
+    freq = 0
+    angle = 0
+    last_angle = 0
+
+    # List of angle in each frame, if angle cannot be determined or no pose
+    # found in frame, the angle will be None
+    frame_angles = list()     
+
+    # sum up tilt angles for the current video
+    for i in range(0, video.num_frames):
+        pose = video.get_frame_pose(i)
+        if pose is not None and has_keypoint(pose, RShoulder)
+                            and has_keypoint(pose, RElbow)
+                            and has_keypoint(pose, Neck)
+                            and has_keypoint(pose, MHip): 
+
+            angle = calculate_angle(pose,RShoulder,RElbow,Neck,MHip)
+            if angle == None: #reuse last angle if cant calculate one
+                angle = last_angle
+                frame_angles.append(None)
+            frame_angles.append(angle)
+            
         else:
-            count += 1
-            if frame_pose != False:
-                # print(calculate_angle(frame_pose))
-                angle = calculate_angle(frame_pose,RShoulder,RElbow,Neck,MHip)
-                if angle == None: #reuse last angle if cant calculate one
-                    angle = all_angles[-1]
-                angle_sum += angle
-                angles.append(angle)
-                all_angles.append(angle)
-                
+            angle = last_angle
+            frame_angles.append(None)
+        
+        # Append the angle to angles
+        angles.append(angle)
+         
+        if len(angles) > 0:
+            # Why are we subtracting the average from each angle?
+            # angles = np.subtract(angles,np.average(angles))
+
+            # Use last 40 angles when more than 40
+            if len(angles) > 40: 
+                # Use last 40 angles for FFT
+                FFT = sy.fft(np.array(angles[-40:]))
             else:
-                angles.append(0)
+                FFT = sy.fft(np.array(angles))
+            sample_frequencies = np.fft.fftfreq( len(FFT), d=0.04)
+            freq = abs(sample_frequencies[np.argmax(FFT)]) 
+        frequencies.append(freq)
+        last_angle = angle
 
-            if len(angles) >= 40:
-                # Read in data from file here
-                length = len(angles)
-                angles = np.subtract(angles,np.average(angles))
-                # Create time data for x axis based on array length
-                x = sy.linspace(0.04, length*0.04, num=length)
-
-                # Do FFT analysis of array
-                FFT = sy.fft(angles)
-                # power = np.abs(FFT)
-                freq = np.fft.fftfreq(len(FFT),d=0.04)
-                # plt.figure()
-                # plt.plot( freq, FFT)
-                peakY = np.max(FFT) # Find max peak
-                locY = np.argmax(FFT) # Find its location
-                frqY = abs(freq[locY]) 
-                angles = list()
-                # print(frqY)
-                # plt.ioff()
-                # plt.show()
-            frequencies.append(frqY)
-    video.pos = 0
-    if count == 0:
-        return "Error, divide by zero"
-    else:
-        return angle_sum/count, all_angles, frequencies
-
-
-def main():
-    video_data = scan_json_directories2('../json_output/handwaving')
-    for video in video_data:
-        print(video.path + ":")
-        # average_angle, angles = calculate_average_angle(video)
-        average_angle, angles, freqs = calculate_frequency(video)
-        # print("Average angle (degrees):")
-        # print(average_angle)
-        print("")
-        write_to_frame(video, angles, freqs)
-
-
-if __name__ == "__main__":
-    main()
+    return frame_angles, frequencies

@@ -2,7 +2,7 @@ import openpose_all
 import angles
 import pose_learn
 import os
-from posedata import PoseData
+from posedata2 import PoseData
 import sys
 
 
@@ -49,7 +49,7 @@ def main():
    
     # Get the angles information
     print("Calculating angles")
-    average_angle, frame_angles, freqs = angles.calculate_frequency(pd)
+    frame_angles, freqs = angles.calculate_frequency(pd)
 
     # Classify the video
     print("Classifying behaviors")
