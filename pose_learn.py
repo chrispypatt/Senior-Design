@@ -30,7 +30,7 @@ behaviors = ['walking', 'jogging', 'boxing', 'handclapping', 'handwaving',
 
 num_behaviors = 6
 
-model_file = 'nonormal_model.h5'
+model_file = 'nonormal_model2.h5'
 normalize = False
 
 #_ Predict Single Video ________________________________________________________
