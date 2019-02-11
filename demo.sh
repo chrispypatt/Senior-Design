@@ -9,7 +9,7 @@ input_video_path="$(cd "$(dirname "$1")"; pwd)/$(basename "$1")"
 input_video_dir="$(dirname "${input_video_path}")"
 input_video_name="$(basename "$input_video_path")"
 fps25_video_name="fps25_${input_video_name}"
-fps25_video_path="${input_video_dir}/${fps25_video_name}"
+fps25_video_path="${fps25_video_name}"
 fps25_video_basename="$(echo "$fps25_video_name" | cut -f 1 -d '.')"
 output_video_name="output_${fps25_video_basename}new.avi"
 remote_output_dir="${remote_input_dir}/output_${fps25_video_basename}"
@@ -57,7 +57,8 @@ fi
 
 
 # Get the output video from the remote host  
-sshpass -p ${password} sftp patte539@jupiter-2.cs.umn.edu ${remote_output_video_path} ${input_dir}
+sshpass -p ${password} sftp ${user}@${host}:${remote_output_video_path} 
+# sshpass -p ${password} sftp patte539@jupiter-2.cs.umn.edu ${remote_output_video_path} ${input_dir}
 if [ $? -eq 0 ]; then
     echo "Output video transfer successful"
 else
